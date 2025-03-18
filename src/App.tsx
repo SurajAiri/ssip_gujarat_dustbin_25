@@ -11,7 +11,7 @@ import { ResolveComplaintScreen } from "./features/complaint/screens/ResolveComp
 import { SchedulePickupScreen } from "./features/map/screens/SchedulePickupScreen";
 import { useAuthStore } from "./stores/authStore";
 import { JSX } from 'react/jsx-runtime';
-import { LandingScreen } from "./features/general/screens/LandingScreen";
+import LandingScreen from "./features/general/screens/LandingScreen";
 
 // Protected Route Component
 const ProtectedRoute = ({ element }: { element: JSX.Element }) => {

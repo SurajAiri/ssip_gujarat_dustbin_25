@@ -75,11 +75,11 @@ const navItems: NavItem[] = [
           This website does not belong to any government organization
         </div>
         <div className="flex gap-2 ml-auto">
-          {isLoggedIn ? (
+          {/* {isLoggedIn ? (
             <Button variant="ghost" size="sm" className="text-white hover:text-white hover:bg-blue-700">
               Admin
             </Button>
-          ) : null}
+          ) : null} */}
           <Button 
             variant="ghost" 
             size="sm" 

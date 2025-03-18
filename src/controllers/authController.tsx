@@ -43,12 +43,13 @@ export const authController = {
     try {
       // Call API to invalidate token on server
       await authApi.logout();
-      
+    
       // Clear auth state
       useAuthStore.getState().logout();
       
-      // Remove token from storage
-      localStorage.removeItem('token');
+      // reset all state in localStorage
+      localStorage.clear();
+
       
       return { success: true };
     } catch (error) {
