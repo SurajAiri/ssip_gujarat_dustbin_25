@@ -9,6 +9,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import CustomHeader from "@/components/Header";
 import Footer from "@/components/Footer";
+import { authController } from "@/controllers/authController";
 
 const LoginScreen = () => {
     const navigate = useNavigate();
@@ -22,14 +23,14 @@ const LoginScreen = () => {
         setIsLoading(true);
         
         try {
-            // Implement your authentication logic here
-            // For example: await authService.login(email, password);
-            
-            // Show success toast
-            toast.success("Login successful!");
-            
-            // Navigate to dashboard after successful login
-            navigate("/dashboard");
+            // Use the controller to handle login
+            const result = await authController.login(email, password);
+            if (result.success) {
+                toast.success("Login successful!");
+                navigate("/"); // Navigate to home after successful login
+            } else {
+                toast.error(result.error || "Login failed. Please check your credentials.");
+            }
         } catch (error) {
             console.error("Login failed:", error);
             toast.error("Login failed. Please check your credentials.");
@@ -40,7 +41,7 @@ const LoginScreen = () => {
 
     return (
         <>
-        <CustomHeader isLoggedIn={false} />
+        <CustomHeader  />
         <div className="flex items-center justify-center bg-gray-50 p-16">
             <ToastContainer position="top-right" autoClose={3000} />
             <Card className="w-full max-w-md">

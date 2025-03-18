@@ -11,10 +11,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Menu, User, Home, Map, BarChart, Upload, Droplet, Leaf, Calendar, Info } from "lucide-react";
+import { Menu, User, Home, Map, BarChart, Droplet, Leaf, Calendar, Info } from "lucide-react";
 import { Link } from 'react-router-dom';
 import { APP_NAME, GOVERNMENT } from '@/utils/contants';
 import { useNavigate } from 'react-router-dom';
+import { useAuthStore } from '@/stores/authStore';
+import { toast } from 'react-toastify';
 
 
 interface NavItem {
@@ -24,8 +26,9 @@ interface NavItem {
   requiresAuth?: boolean;
 }
 
-const CustomHeader = ({ isLoggedIn = false }) => {
+const CustomHeader = () => {
   const [open, setOpen] = useState(false);
+  const {isAuthenticated:isLoggedIn} = useAuthStore();
     const navigate = useNavigate();
 
 const navItems: NavItem[] = [
@@ -55,6 +58,8 @@ const navItems: NavItem[] = [
     function handleLoginLogout(): void {
         if(isLoggedIn){
             // Implement your logout logic here
+            useAuthStore.getState().logout();
+            toast.success("Logged out successfully");
         }
         
         // go to login screen and remove all previous routes

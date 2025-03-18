@@ -1,4 +1,4 @@
-interface IComplaint{
+export interface IComplaint{
     title: string;
     description: string;
     category: string;

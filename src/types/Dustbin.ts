@@ -1,4 +1,4 @@
-interface IDustbin{
+export interface IDustbin{
     id: string;
     location: string;
     status: string;
