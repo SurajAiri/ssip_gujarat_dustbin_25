@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -17,10 +16,6 @@ import {
 } from "@/components/ui/accordion";
 import { useAuthStore } from "@/stores/authStore";
 
-interface FooterLink {
-  label: string;
-  href: string;
-}
 
 const Footer = () => {
   const {isAuthenticated} = useAuthStore();

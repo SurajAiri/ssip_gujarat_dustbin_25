@@ -1,9 +1,8 @@
-import React from 'react';
-import { Truck, Map, Calendar, BarChart, Droplet, Leaf, Info, ExternalLink, ArrowRight, AlertCircle, CheckCircle, RefreshCw } from 'lucide-react';
+import { Truck, Map, Calendar, BarChart, Droplet, Leaf, Info, ArrowRight, AlertCircle, CheckCircle, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { APP_NAME, GOVERNMENT } from '@/utils/contants';
+import {  GOVERNMENT } from '@/utils/contants';
 import CustomHeader from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useNavigate } from 'react-router-dom';

@@ -39,7 +39,7 @@ export function ComplaintScreen() {
                     setLocation(`${position.coords.latitude},${position.coords.longitude}`);
                 },
                 (error) => {
-                    toast.error("Unable to get location. Please enable location services.");
+                    toast.error(`Unable to get location. Please enable location services ${error.message || error}`);
                 }
             );
         } else {

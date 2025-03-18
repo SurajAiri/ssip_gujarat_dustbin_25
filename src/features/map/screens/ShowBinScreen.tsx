@@ -1,7 +1,7 @@
 import Footer from "@/components/Footer";
 import CustomHeader from "@/components/Header";
-import React, { useState, useCallback } from 'react';
-import { GoogleMap, useJsApiLoader, Marker, InfoWindow, MarkerClusterer } from '@react-google-maps/api';
+import  { useState } from 'react';
+import { GoogleMap, useJsApiLoader, Marker, InfoWindow, MarkerClusterer, Libraries } from '@react-google-maps/api';
 import { IBinMarker } from "@/types/Dustbin";
 
 
@@ -54,7 +54,7 @@ const generateRandomBins = (count = 100): IBinMarker[] => {
 // Sample bin data - generates 100 random bins by default
 const sampleBins: IBinMarker[] = generateRandomBins();
 
-const libraries: ("places" | "drawing" | "geometry" | "localContext" | "visualization")[] = ['places'];
+const libraries: Libraries = ['places'];
 
 export function ShowBinScreen() {
     // Load Google Maps API
@@ -64,19 +64,19 @@ export function ShowBinScreen() {
         libraries
     });
 
-    const [map, setMap] = useState<google.maps.Map | null>(null);
+    // const [map, setMap] = useState<google.maps.Map | null>(null);
     const [bins] = useState<IBinMarker[]>(sampleBins);
     const [selectedBin, setSelectedBin] = useState<IBinMarker | null>(null);
 
     // Handle map load
-    const onLoad = useCallback((map: google.maps.Map) => {
-        setMap(map);
-    }, []);
+    // const onLoad = useCallback((map: google.maps.Map) => {
+    //     // setMap(map);
+    // }, []);
 
     // Handle map unmount
-    const onUnmount = useCallback(() => {
-        setMap(null);
-    }, []);
+    // const onUnmount = useCallback(() => {
+    //     setMap(null);
+    // }, []);
 
     // Get custom bin marker icon based on fill percentage
     const getBinMarkerIcon = (bin: IBinMarker) => {
@@ -129,8 +129,8 @@ export function ShowBinScreen() {
                     mapContainerStyle={{ width: '100%', height: '100%', minHeight: '800px' }}
                     center={center}
                     zoom={13}
-                    onLoad={onLoad}
-                    onUnmount={onUnmount}
+                    // onLoad={onLoad}
+                    // onUnmount={onUnmount}
                     options={{
                         fullscreenControl: false,
                         mapTypeControl: false,

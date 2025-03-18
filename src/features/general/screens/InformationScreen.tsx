@@ -1,7 +1,7 @@
 import Footer from "@/components/Footer";
 import CustomHeader from "@/components/Header";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-import { Trash, Sword, CheckCircle, ShieldX, ShieldPlus } from "lucide-react";
+import { Trash, CheckCircle, ShieldX, ShieldPlus } from "lucide-react";
 
 export function InformationScreen() {
     const dummyData = {
