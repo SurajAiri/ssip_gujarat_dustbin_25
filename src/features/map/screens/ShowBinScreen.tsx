@@ -2,16 +2,8 @@ import Footer from "@/components/Footer";
 import CustomHeader from "@/components/Header";
 import React, { useState, useCallback } from 'react';
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow, MarkerClusterer } from '@react-google-maps/api';
+import { IBinMarker } from "@/types/Dustbin";
 
-// Define types for our markers
-interface BinMarker {
-    id: string;
-    position: google.maps.LatLngLiteral;
-    title: string;
-    description: string;
-    filledPercentage: number;
-    completelyFilled: boolean;
-}
 
 // Initial map center (Gujarat)
 const center = {
@@ -19,49 +11,48 @@ const center = {
     lng: 72.6369
 };
 
-// Sample bin data
-const sampleBins: BinMarker[] = [
-    {
-        id: '1',
-        position: { lat: 23.2156, lng: 72.6369 },
-        title: 'Waste Collection Point #1',
-        description: 'Main collection point in Ahmedabad',
-        filledPercentage: 78,
-        completelyFilled: false
-    },
-    {
-        id: '2',
-        position: { lat: 23.2256, lng: 72.6469 },
-        title: 'Waste Collection Point #2',
-        description: 'Secondary collection point',
-        filledPercentage: 52,
-        completelyFilled: false
-    },
-    {
-        id: '3',
-        position: { lat: 23.2056, lng: 72.6269 },
-        title: 'Recycling Station',
-        description: 'Specialized recycling point',
-        filledPercentage: 99,
-        completelyFilled: true
-    },
-    {
-        id: '4',
-        position: { lat: 23.2356, lng: 72.6569 },
-        title: 'Waste Collection Point #4',
-        description: 'Commercial waste collection',
-        filledPercentage: 30,
-        completelyFilled: false
-    },
-    {
-        id: '5',
-        position: { lat: 23.2456, lng: 72.6669 },
-        title: 'Waste Collection Point #5',
-        description: 'Residential waste collection',
-        filledPercentage: 90,
-        completelyFilled: false
+// Function to generate random bins for testing
+const generateRandomBins = (count = 100): IBinMarker[] => {
+    const bins: IBinMarker[] = [];
+    
+    // Center point (Gujarat)
+    const centerPoint = center;
+    
+    // 10km in degrees is approximately:
+    // 1 degree of latitude = ~111km, so 10km = ~0.09 degrees latitude
+    // 1 degree of longitude varies with latitude, at 23.2156°N it's roughly 102km, so 10km = ~0.098 degrees longitude
+    const radiusLat = 0.09;
+    const radiusLng = 0.098;
+    
+    for (let i = 0; i < count; i++) {
+        // Generate random position within 10km radius
+        // Using random angle and distance (up to 10km)
+        const angle = Math.random() * 2 * Math.PI;
+        const distance = Math.random() * 1; // 0-1 scale for the radius
+        
+        // Convert to lat/lng offset
+        const lat = centerPoint.lat + (Math.cos(angle) * distance * radiusLat);
+        const lng = centerPoint.lng + (Math.sin(angle) * distance * radiusLng);
+        
+        // Generate random fill percentage
+        const filledPercentage = Math.floor(Math.random() * 101);
+        const completelyFilled = filledPercentage >= 95;
+        
+        bins.push({
+            id: `bin-${i}`,
+            position: { lat, lng },
+            title: `Waste Collection Point #${i + 1}`,
+            description: `Collection point in ${filledPercentage > 80 ? 'critical' : filledPercentage > 50 ? 'moderate' : 'good'} condition`,
+            filledPercentage,
+            completelyFilled
+        });
     }
-];
+    
+    return bins;
+};
+
+// Sample bin data - generates 100 random bins by default
+const sampleBins: IBinMarker[] = generateRandomBins();
 
 const libraries: ("places" | "drawing" | "geometry" | "localContext" | "visualization")[] = ['places'];
 
@@ -74,8 +65,8 @@ export function ShowBinScreen() {
     });
 
     const [map, setMap] = useState<google.maps.Map | null>(null);
-    const [bins] = useState<BinMarker[]>(sampleBins);
-    const [selectedBin, setSelectedBin] = useState<BinMarker | null>(null);
+    const [bins] = useState<IBinMarker[]>(sampleBins);
+    const [selectedBin, setSelectedBin] = useState<IBinMarker | null>(null);
 
     // Handle map load
     const onLoad = useCallback((map: google.maps.Map) => {
@@ -88,7 +79,7 @@ export function ShowBinScreen() {
     }, []);
 
     // Get custom bin marker icon based on fill percentage
-    const getBinMarkerIcon = (bin: BinMarker) => {
+    const getBinMarkerIcon = (bin: IBinMarker) => {
         // Determine color based on fill percentage
         let fillColor = '#4ade80'; // Green for low fill
         
@@ -135,7 +126,7 @@ export function ShowBinScreen() {
             <CustomHeader />
             <div className="flex-grow">
                 <GoogleMap
-                    mapContainerStyle={{ width: '100%', height: '100%', minHeight: '500px' }}
+                    mapContainerStyle={{ width: '100%', height: '100%', minHeight: '800px' }}
                     center={center}
                     zoom={13}
                     onLoad={onLoad}

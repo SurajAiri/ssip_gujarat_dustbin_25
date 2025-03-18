@@ -7,3 +7,13 @@ export interface IDustbin{
     capacity: number;
     filledPercentage: number;
 }
+
+// Define types for our markers
+export interface IBinMarker {
+    id: string;
+    position: google.maps.LatLngLiteral;
+    title: string;
+    description: string;
+    filledPercentage: number;
+    completelyFilled: boolean;
+}
