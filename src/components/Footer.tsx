@@ -15,6 +15,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { useAuthStore } from "@/stores/authStore";
 
 interface FooterLink {
   label: string;
@@ -22,13 +23,14 @@ interface FooterLink {
 }
 
 const Footer = () => {
+  const {isAuthenticated} = useAuthStore();
   const currentYear = new Date().getFullYear();
-
 const footerSections = [
     {
         title: "Quick Links",
         links: [
-            { label: "Home", href: "/" },
+           isAuthenticated? { label: "Home", href: "/" }:
+            {label:"Landing Page",href:"/landing"},
             { label: "Show Bins", href: "/bin-map" },
             { label: "Report Issue", href: "/report" },
             { label: "Information", href: "/info" },
@@ -40,6 +42,7 @@ const footerSections = [
             { label: "Visualize Data", href: "/visualize" },
             { label: "Schedule Pickup", href: "/pickup-map" },
             { label: "Resolve Issues", href: "/resolve" },
+            { label: "Report Issue", href: "/report" },
         ],
     },
     {
@@ -177,3 +180,4 @@ const footerSections = [
 };
 
 export default Footer;
+

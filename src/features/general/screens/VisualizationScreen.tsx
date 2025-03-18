@@ -13,6 +13,7 @@ import {
   Legend,
   ChartData,
 } from 'chart.js';
+import { IDustbinFilledCount } from "@/types/DustbinInfo";
 
 // Register Chart.js components
 ChartJS.register(
@@ -25,33 +26,117 @@ ChartJS.register(
   Legend
 );
 
-export interface IDustbinFilledCount {
-  filled90: number;
-  filled50: number;
-  filled30: number;
-  below30: number;
-}
-
 export function VisualizationScreen() {
   const [updateInterval, setUpdateInterval] = useState<number>(10);
   const [timeLabels, setTimeLabels] = useState<string[]>([]);
   const [dustbinData, setDustbinData] = useState<IDustbinFilledCount[]>([]);
-  const TOTAL_BINS = 100; // Total number of bins remains constant
+  const TOTAL_BINS = 830; // Total number of bins remains constant
 
-  // Initialize with random data
+  // Initialize with 10 data points
   useEffect(() => {
+    // Generate initial data point with more realistic normal distribution
+    // Most bins should be in the middle range (30-50% and 50-90%)
+    // with fewer bins at the extremes (below 30% and above 90%)
     const initialData: IDustbinFilledCount = {
-      filled90: Math.floor(Math.random() * 20),
-      filled50: Math.floor(Math.random() * 25),
-      filled30: Math.floor(Math.random() * 25),
-      below30: TOTAL_BINS - (Math.floor(Math.random() * 20) + Math.floor(Math.random() * 25) + Math.floor(Math.random() * 25)),
+      filled90: Math.floor(TOTAL_BINS * 0.15), // About 15% of bins are very full
+      filled50: Math.floor(TOTAL_BINS * 0.35), // About 35% are moderately full
+      filled30: Math.floor(TOTAL_BINS * 0.30), // About 30% are somewhat full
+      below30: Math.floor(TOTAL_BINS * 0.20)  // About 20% are mostly empty
     };
     
-    setDustbinData([initialData]);
-    setTimeLabels([new Date().toLocaleTimeString()]);
-  }, []);
+    // Adjust to ensure total is exactly TOTAL_BINS
+    const total = initialData.filled90 + initialData.filled50 + initialData.filled30 + initialData.below30;
+    const diff = TOTAL_BINS - total;
+    initialData.below30 += diff; // Adjust the below30 category to make sure total is exact
+    
+    // Function to generate next data point based on previous
+    const generateNextDataPoint = (prevData: IDustbinFilledCount): IDustbinFilledCount => {
+      // Create a copy of the previous data
+      let newData = { ...prevData };
+      
+      // FILLING PROCESS
+      const below30ToFilled30 = Math.min(
+        newData.below30, 
+        Math.floor(Math.random() * 5)
+      );
+      newData.below30 -= below30ToFilled30;
+      newData.filled30 += below30ToFilled30;
+      
+      const filled30ToFilled50 = Math.min(
+        newData.filled30, 
+        Math.floor(Math.random() * 4)
+      );
+      newData.filled30 -= filled30ToFilled50;
+      newData.filled50 += filled30ToFilled50;
+      
+      const filled50ToFilled90 = Math.min(
+        newData.filled50, 
+        Math.floor(Math.random() * 3)
+      );
+      newData.filled50 -= filled50ToFilled90;
+      newData.filled90 += filled50ToFilled90;
+      
+      // EMPTYING PROCESS
+      const filled90ToBelow30 = Math.min(
+        newData.filled90,
+        Math.random() > 0.3 ? Math.floor(Math.random() * 4) : 0
+      );
+      newData.filled90 -= filled90ToBelow30;
+      newData.below30 += filled90ToBelow30;
+      
+      const filled50ToBelow30 = Math.min(
+        newData.filled50,
+        Math.random() > 0.7 ? Math.floor(Math.random() * 2) : 0
+      );
+      newData.filled50 -= filled50ToBelow30;
+      newData.below30 += filled50ToBelow30;
+      
+      const filled30ToBelow30 = Math.min(
+        newData.filled30,
+        Math.random() > 0.9 ? 1 : 0
+      );
+      newData.filled30 -= filled30ToBelow30;
+      newData.below30 += filled30ToBelow30;
+      
+      // Validate total
+      const total = newData.filled90 + newData.filled50 + newData.filled30 + newData.below30;
+      if (total !== TOTAL_BINS) {
+        const diff = TOTAL_BINS - total;
+        newData.below30 += diff;
+      }
+      
+      return newData;
+    };
+    
+    // Generate 10 data points
+    const initialDataArray: IDustbinFilledCount[] = [initialData];
+    const initialTimeLabels: string[] = [];
+    
+    // Start with a time 10 * updateInterval seconds ago
+    const startTime = new Date();
+    startTime.setSeconds(startTime.getSeconds() - (updateInterval * 9));
+    
+    // Add first time label
+    initialTimeLabels.push(startTime.toLocaleTimeString());
+    
+    // Generate 9 more data points (total 10)
+    for (let i = 1; i < 10; i++) {
+      // Generate next data based on previous
+      const nextData = generateNextDataPoint(initialDataArray[i-1]);
+      initialDataArray.push(nextData);
+      
+      // Create time label with proper interval spacing
+      const nextTime = new Date(startTime);
+      nextTime.setSeconds(nextTime.getSeconds() + (updateInterval * i));
+      initialTimeLabels.push(nextTime.toLocaleTimeString());
+    }
+    
+    // Set the initial data array and time labels
+    setDustbinData(initialDataArray);
+    setTimeLabels(initialTimeLabels);
+  }, [updateInterval]);
 
-  // Update data at intervals
+  // Update data at intervals (existing code)
   useEffect(() => {
     const timer = setInterval(() => {
       setDustbinData((prevData) => {
@@ -127,7 +212,7 @@ export function VisualizationScreen() {
         
         if (total !== TOTAL_BINS) {
           console.error("Total bins mismatch:", total, "expected:", TOTAL_BINS);
-          // Force correction if there's a mismatch (shouldn't happen with this approach)
+          // Force correction if there's a mismatch
           const diff = TOTAL_BINS - total;
           newData.below30 += diff;
         }
@@ -178,24 +263,6 @@ export function VisualizationScreen() {
       },
     ],
   };
-
-// // Debug: Log the total count of bins after each update
-// useEffect(() => {
-//     if (dustbinData.length > 0) {
-//         const lastData = dustbinData[dustbinData.length - 1];
-//         const total = lastData.filled90 + lastData.filled50 + lastData.filled30 + lastData.below30;
-//         console.log(`Total bins count: ${total} (Target: ${TOTAL_BINS})`);
-        
-//         // Additional stats for debugging
-//         console.log({
-//             time: timeLabels[timeLabels.length - 1],
-//             filled90: lastData.filled90,
-//             filled50: lastData.filled50,
-//             filled30: lastData.filled30,
-//             below30: lastData.below30
-//         });
-//     }
-// }, [dustbinData, timeLabels]);
 
   return (
     <div className="flex flex-col min-h-screen">

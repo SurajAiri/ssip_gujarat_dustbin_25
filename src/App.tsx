@@ -16,7 +16,7 @@ import LandingScreen from "./features/general/screens/LandingScreen";
 // Protected Route Component
 const ProtectedRoute = ({ element }: { element: JSX.Element }) => {
   const { isAuthenticated } = useAuthStore();
-  return isAuthenticated ? element : <Navigate to="/landing" />;
+  return isAuthenticated ? element : <Navigate to="/login" />;
 };
 
 function App() {
