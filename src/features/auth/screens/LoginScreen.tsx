@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Label } from "@/components/ui/label";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Header from "@/components/Header";
+import CustomHeader from "@/components/Header";
 import Footer from "@/components/Footer";
 
 const LoginScreen = () => {
@@ -40,7 +40,7 @@ const LoginScreen = () => {
 
     return (
         <>
-        <Header isLoggedIn={false} />
+        <CustomHeader isLoggedIn={false} />
         <div className="flex items-center justify-center bg-gray-50 p-16">
             <ToastContainer position="top-right" autoClose={3000} />
             <Card className="w-full max-w-md">

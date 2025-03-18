@@ -11,9 +11,11 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Menu, User, ChevronDown, Home, Map, BarChart, Upload, Droplet, Leaf } from "lucide-react";
+import { Menu, User, Home, Map, BarChart, Upload, Droplet, Leaf, Calendar, Info } from "lucide-react";
 import { Link } from 'react-router-dom';
 import { APP_NAME, GOVERNMENT } from '@/utils/contants';
+import { useNavigate } from 'react-router-dom';
+
 
 interface NavItem {
   label: string;
@@ -22,27 +24,43 @@ interface NavItem {
   requiresAuth?: boolean;
 }
 
-const Header = ({ isLoggedIn = false }) => {
+const CustomHeader = ({ isLoggedIn = false }) => {
   const [open, setOpen] = useState(false);
+    const navigate = useNavigate();
 
-  const navItems: NavItem[] = [
+const navItems: NavItem[] = [
     { label: 'Home', href: '/', icon: <Home className="w-4 h-4 mr-2" /> },
-    { label: 'Environment Authority', href: '/environment', icon: <Droplet className="w-4 h-4 mr-2" />, 
-      requiresAuth: false },
-    { label: 'Mapping', href: '/mapping', icon: <Map className="w-4 h-4 mr-2" /> },
-    { label: 'Report Issue', href: '/report', icon: <BarChart className="w-4 h-4 mr-2" /> },
-    { label: 'Sensor Data', href: '/sensor-data', icon: <BarChart className="w-4 h-4 mr-2" />, 
-      requiresAuth: true },
-    { label: 'Upload Data', href: '/upload', icon: <Upload className="w-4 h-4 mr-2" />, 
-      requiresAuth: true },
-    { label: 'Quality Map', href: '/quality-map', icon: <Map className="w-4 h-4 mr-2" /> },
-    { label: 'Vegetation Map', href: '/vegetation-map', icon: <Leaf className="w-4 h-4 mr-2" /> },
-  ];
+    {
+        label: "Information", href: "/info", icon: <Info className="w-4 h-4 mr-2" />,
+        requiresAuth: true
+    },
+    {
+        label: "Visualize Data", href: "/visualize", icon: <BarChart className="w-4 h-4 mr-2" />,
+        requiresAuth: true
+    },
+    { label: 'Show Bins', href: '/bin-map', icon: <Map className="w-4 h-4 mr-2" /> },
+    { label: 'Schedule Pickup', href: '/pickup-map', icon: <Calendar className="w-4 h-4 mr-2" /> ,requiresAuth:true},
+    { 
+        label: "Resolve Issues", href: "/resolve", icon: <Leaf className="w-4 h-4 mr-2" />,
+        requiresAuth: true
+    },
+    { label: 'Report Issue', href: '/report', icon: <Droplet className="w-4 h-4 mr-2" /> },
+];
 
   // Filter items based on auth status
   const filteredNavItems = navItems.filter(item => 
     !item.requiresAuth || (item.requiresAuth && isLoggedIn)
   );
+
+    function handleLoginLogout(): void {
+        if(isLoggedIn){
+            // Implement your logout logic here
+        }
+        
+        // go to login screen and remove all previous routes
+        navigate('/login', { replace: true });
+
+    }
 
   return (
     <header className="w-full">
@@ -61,6 +79,7 @@ const Header = ({ isLoggedIn = false }) => {
             variant="ghost" 
             size="sm" 
             className="text-white hover:text-white hover:bg-blue-700"
+            onClick={handleLoginLogout}
           >
             {isLoggedIn ? 'Logout' : 'Login'}
           </Button>
@@ -91,7 +110,7 @@ const Header = ({ isLoggedIn = false }) => {
           {filteredNavItems.map((item) => (
             <Link 
               key={item.label} 
-              href={item.href}
+              to={item.href}
               className="px-4 py-3 hover:bg-blue-800 flex items-center text-sm whitespace-nowrap"
             >
               {item.label}
@@ -113,7 +132,7 @@ const Header = ({ isLoggedIn = false }) => {
               {filteredNavItems.map((item) => (
                 <Link 
                   key={item.label} 
-                  href={item.href}
+                  to={item.href}
                   className="px-4 py-3 hover:bg-blue-800 flex items-center rounded"
                   onClick={() => setOpen(false)}
                 >
@@ -152,4 +171,4 @@ const Header = ({ isLoggedIn = false }) => {
   );
 };
 
-export default Header;
+export default CustomHeader;
