@@ -13,10 +13,12 @@ export interface IBinPickupRequest {
     image: string;
     location: string;
     status: string;
-    date: string;
+    // date: string;
     personName: string;
     personContact: string;
     personEmail: string;
+    eventDate?: string;
+    duration?: number;
 }
 
 export function ComplaintScreen() {
@@ -30,9 +32,10 @@ export function ComplaintScreen() {
     const [location, setLocation] = useState("");
     const [isPermanent, setIsPermanent] = useState(false);
 
-    const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm<IBinPickupRequest>({
+    const { register, handleSubmit, formState: { errors }, reset, setValue, watch } = useForm<IBinPickupRequest>({
         defaultValues: {
-            isPermanent: false
+            isPermanent: false,
+            duration: 1
         }
     });
 
@@ -166,6 +169,9 @@ export function ComplaintScreen() {
         }
     };
 
+    // Get today's date in YYYY-MM-DD format for min date in the datepicker
+    const today = new Date().toISOString().split('T')[0];
+
     return (
         <div className="flex flex-col min-h-screen">
             <CustomHeader />
@@ -200,12 +206,13 @@ export function ComplaintScreen() {
                         <div className="flex flex-col space-y-3">
                             <label className="block text-sm font-medium">Bin Request Type</label>
                             
-                            <div className="flex items-center space-x-4">
+                            {/* Changed to flex-col on small screens and flex-row on medium+ screens */}
+                            <div className="flex flex-col md:flex-row space-y-3 md:space-y-0 md:space-x-4">
                                 <div 
                                     className={`flex-1 py-3 px-4 border rounded-lg transition-all duration-200 cursor-pointer ${!isPermanent ? 'bg-blue-50 border-blue-300' : 'hover:bg-gray-50'}`}
                                     onClick={() => setIsPermanent(false)}
                                 >
-                                    <div>
+                                    <div className="text-center md:text-left">
                                         <p className="font-medium text-gray-800">Temporary</p>
                                         <p className="text-xs text-gray-500">One-time pickup or event-based cleanup</p>
                                     </div>
@@ -215,7 +222,7 @@ export function ComplaintScreen() {
                                     className={`flex-1 py-3 px-4 border rounded-lg transition-all duration-200 cursor-pointer ${isPermanent ? 'bg-blue-50 border-blue-300' : 'hover:bg-gray-50'}`}
                                     onClick={() => setIsPermanent(true)}
                                 >
-                                    <div>
+                                    <div className="text-center md:text-left">
                                         <p className="font-medium text-gray-800">Permanent</p>
                                         <p className="text-xs text-gray-500">Area lacks waste management solution</p>
                                     </div>
@@ -223,6 +230,55 @@ export function ComplaintScreen() {
                             </div>
                             
                             <input type="hidden" {...register("isPermanent")} />
+                            
+                            {/* Event details for temporary requests */}
+                            {!isPermanent && (
+                                <div className="mt-3 p-3 bg-gray-50 rounded-lg border border-gray-200">
+                                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                                        <div className="w-full">
+                                            <label className="block text-sm font-medium mb-1">Event Date</label>
+                                            <input 
+                                                type="date" 
+                                                min={today}
+                                                {...register("eventDate", { 
+                                                    required: !isPermanent ? "Event date is required for temporary requests" : false 
+                                                })}
+                                                className="w-full p-2 border rounded"
+                                            />
+                                            {errors.eventDate && (
+                                                <p className="text-red-500 text-xs mt-1">{errors.eventDate.message}</p>
+                                            )}
+                                        </div>
+                                        
+                                        <div className="w-full">
+                                            <label className="block text-sm font-medium mb-1">Duration (in days)</label>
+                                            <div className="flex items-center">
+                                                <input 
+                                                    type="number" 
+                                                    min="1"
+                                                    max="30"
+                                                    {...register("duration", { 
+                                                        required: !isPermanent ? "Duration is required for temporary requests" : false,
+                                                        min: {
+                                                            value: 1,
+                                                            message: "Duration must be at least 1 day"
+                                                        },
+                                                        max: {
+                                                            value: 30,
+                                                            message: "Duration cannot exceed 30 days"
+                                                        }
+                                                    })}
+                                                    className="w-full p-2 border rounded mr-2"
+                                                />
+                                                <span className="text-gray-500 whitespace-nowrap">days</span>
+                                            </div>
+                                            {errors.duration && (
+                                                <p className="text-red-500 text-xs mt-1">{errors.duration.message}</p>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                     
@@ -391,7 +447,7 @@ export function ComplaintScreen() {
                         type="submit" 
                         className={`py-2 px-6 rounded ${!uploadComplete 
                             ? 'bg-gray-400 cursor-not-allowed' 
-                            : 'bg-primary text-white hover:bg-primary-dark'}`}
+                            : 'bg-blue-500 text-white hover:bg-blue-600'}`}
                         disabled={isLoading || !uploadComplete}
                     >
                         Submit Bin Pickup Request
