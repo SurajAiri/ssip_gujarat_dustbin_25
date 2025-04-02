@@ -6,6 +6,12 @@ import axios from "axios";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+// Debug mode flag - set to true during development, false for production
+const IS_DEBUG = true; // Change to true to enable debug mode
+
+// Add this constant for the dummy location
+const DUMMY_LOCATION = "23.0225,72.5714"; // Example coordinates for Ahmedabad
+
 export interface IBinPickupRequest {
     title: string;
     description: string;
@@ -13,7 +19,6 @@ export interface IBinPickupRequest {
     image: string;
     location: string;
     status: string;
-    // date: string;
     personName: string;
     personContact: string;
     personEmail: string;
@@ -48,6 +53,15 @@ export function ComplaintScreen() {
 
     // Get current location
     useEffect(() => {
+        // If debug mode is enabled, use dummy location data
+        if (IS_DEBUG) {
+            console.log("Debug mode: Using dummy location");
+            setLocation(DUMMY_LOCATION);
+            setLocationError(null);
+            setLocationLoading(false);
+            return; // Skip the actual geolocation request
+        }
+
         setLocationLoading(true);
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
@@ -92,6 +106,15 @@ export function ComplaintScreen() {
     }, []);
 
     const retryLocationAccess = () => {
+        if (IS_DEBUG) {
+            setLocation(DUMMY_LOCATION);
+            setLocationError(null);
+            setLocationLoading(false);
+            toast.info("Debug mode: Using dummy location", { autoClose: 3000 });
+            return;
+        }
+
+        // Original retry logic for non-debug mode
         setLocationLoading(true);
         setLocationError(null);
         
