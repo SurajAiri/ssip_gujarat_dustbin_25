@@ -27,13 +27,13 @@ function App() {
         <Route path="/login" element={<LoginScreen />} />
 
         {/* No Auth: General public */}
-        <Route path="/report" element={<ComplaintScreen />} />
+        <Route path="/request" element={<ComplaintScreen />} />
         <Route path='/bin-map' element={<ShowBinScreen />} />
         <Route path='/landing' element={<LandingScreen />} />
 
         {/* Admin */}
-        <Route path="/" element={<ProtectedRoute element={<HomeScreen />} />} />
-        <Route path="/info" element={<ProtectedRoute element={<InformationScreen />} />} />
+        <Route path="/" element={<ProtectedRoute element={<InformationScreen />} />} />
+        {/* <Route path="/info" element={<ProtectedRoute element={<InformationScreen />} />} /> */}
         <Route path="/visualize" element={<ProtectedRoute element={<VisualizationScreen />} />} />
         <Route path="/pickup-map" element={<ProtectedRoute element={<SchedulePickupScreen />} />} />
         <Route path="/resolve" element={<ProtectedRoute element={<ResolveComplaintScreen />} />} />

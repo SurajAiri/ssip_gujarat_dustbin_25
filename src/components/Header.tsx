@@ -33,10 +33,10 @@ const CustomHeader = () => {
 
 const navItems: NavItem[] = [
     { label: 'Home', href: '/', icon: <Home className="w-4 h-4 mr-2" /> },
-    {
-        label: "Information", href: "/info", icon: <Info className="w-4 h-4 mr-2" />,
-        requiresAuth: true
-    },
+    // {
+    //     label: "Information", href: "/info", icon: <Info className="w-4 h-4 mr-2" />,
+    //     requiresAuth: true
+    // },
     {
         label: "Visualize Data", href: "/visualize", icon: <BarChart className="w-4 h-4 mr-2" />,
         requiresAuth: true
@@ -47,7 +47,7 @@ const navItems: NavItem[] = [
         label: "Resolve Issues", href: "/resolve", icon: <Leaf className="w-4 h-4 mr-2" />,
         requiresAuth: true
     },
-    { label: 'Report Issue', href: '/report', icon: <Droplet className="w-4 h-4 mr-2" /> },
+    { label: 'Request Pickup', href: '/request', icon: <Droplet className="w-4 h-4 mr-2" /> },
 ];
 
   // Filter items based on auth status

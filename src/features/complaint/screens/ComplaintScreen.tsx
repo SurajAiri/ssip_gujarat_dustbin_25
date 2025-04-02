@@ -1,4 +1,5 @@
 import Footer from "@/components/Footer";
+import {Switch }from "@/components/ui/switch"
 import CustomHeader from "@/components/Header";
 import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -6,10 +7,10 @@ import axios from "axios";
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-export interface IComplaint {
+export interface IBinPickupRequest {
     title: string;
     description: string;
-    category: string;
+    isPermanent: boolean;
     image: string;
     location: string;
     status: string;
@@ -28,8 +29,18 @@ export function ComplaintScreen() {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const [showCamera, setShowCamera] = useState(false);
     const [location, setLocation] = useState("");
+    const [isPermanent, setIsPermanent] = useState(false);
 
-    const { register, handleSubmit, formState: { errors }, reset } = useForm<IComplaint>();
+    const { register, handleSubmit, formState: { errors }, reset, setValue, watch } = useForm<IBinPickupRequest>({
+        defaultValues: {
+            isPermanent: false
+        }
+    });
+
+    // Update form value when toggle changes
+    useEffect(() => {
+        setValue('isPermanent', isPermanent);
+    }, [isPermanent, setValue]);
 
     // Get current location
     useEffect(() => {
@@ -123,14 +134,14 @@ export function ComplaintScreen() {
         }
     };
 
-    const onSubmit = (data: IComplaint) => {
+    const onSubmit = (data: IBinPickupRequest) => {
         // Check if image is required and has been uploaded
         if (!uploadComplete || !imageUrl) {
             toast.error("Please upload an image before submitting.");
             return;
         }
         
-        const complaintData: IComplaint = {
+        const requestData: IBinPickupRequest = {
             ...data,
             image: imageUrl,
             location: location,
@@ -138,20 +149,21 @@ export function ComplaintScreen() {
             status: "created"
         };
         
-        console.log(complaintData);
+        console.log(requestData);
         
         // Here you would send the data to your backend
         try {
             // Simulating a successful API call
-            // axios.post('/api/complaints', complaintData);
+            // axios.post('/api/bin-pickup-requests', requestData);
             
-            toast.success("Complaint submitted successfully!");
+            toast.success("Bin pickup request submitted successfully!");
             reset();
             setImageUrl("");
             setCapturedImage(null);
             setUploadComplete(false);
+            setIsPermanent(false);
         } catch (error) {
-            toast.error("Failed to submit complaint. Please try again.");
+            toast.error("Failed to submit request. Please try again.");
         }
     };
 
@@ -160,7 +172,7 @@ export function ComplaintScreen() {
             <CustomHeader />
             <ToastContainer position="top-right" autoClose={5000} />
             <div className="flex-grow container mx-auto px-4 py-8">
-                <h1 className="text-2xl font-bold mb-6">Raise Complaint</h1>
+                <h1 className="text-2xl font-bold mb-6">Request Bin Pickup</h1>
                 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                     <div>
@@ -169,6 +181,7 @@ export function ComplaintScreen() {
                             type="text" 
                             {...register("title", { required: "Title is required" })}
                             className="w-full p-2 border rounded"
+                            placeholder="E.g., Garbage pile at Gandhi Road"
                         />
                         {errors.title && <p className="text-red-500 text-sm">{errors.title.message}</p>}
                     </div>
@@ -179,29 +192,44 @@ export function ComplaintScreen() {
                             {...register("description", { required: "Description is required" })}
                             className="w-full p-2 border rounded"
                             rows={4}
+                            placeholder="Please describe the situation and why a bin is needed"
                         />
                         {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
                     </div>
                     
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Category</label>
-                        <select 
-                            {...register("category", { required: "Category is required" })}
-                            className="w-full p-2 border rounded"
-                        >
-                            <option value="">Select category</option>
-                            <option value="garbage">Garbage</option>
-                            <option value="water">Water</option>
-                            <option value="road">Road</option>
-                            <option value="electricity">Electricity</option>
-                            <option value="other">Other</option>
-                        </select>
-                        {errors.category && <p className="text-red-500 text-sm">{errors.category.message}</p>}
+                    <div className="border rounded-lg p-4 shadow-sm">
+                        <div className="flex flex-col space-y-3">
+                            <label className="block text-sm font-medium">Bin Request Type</label>
+                            
+                            <div className="flex items-center space-x-4">
+                                <div 
+                                    className={`flex-1 py-3 px-4 border rounded-lg transition-all duration-200 cursor-pointer ${!isPermanent ? 'bg-blue-50 border-blue-300' : 'hover:bg-gray-50'}`}
+                                    onClick={() => setIsPermanent(false)}
+                                >
+                                    <div>
+                                        <p className="font-medium text-gray-800">Temporary</p>
+                                        <p className="text-xs text-gray-500">One-time pickup or event-based cleanup</p>
+                                    </div>
+                                </div>
+                                
+                                <div 
+                                    className={`flex-1 py-3 px-4 border rounded-lg transition-all duration-200 cursor-pointer ${isPermanent ? 'bg-blue-50 border-blue-300' : 'hover:bg-gray-50'}`}
+                                    onClick={() => setIsPermanent(true)}
+                                >
+                                    <div>
+                                        <p className="font-medium text-gray-800">Permanent</p>
+                                        <p className="text-xs text-gray-500">Area lacks waste management solution</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <input type="hidden" {...register("isPermanent")} />
+                        </div>
                     </div>
                     
                     <div>
                         <label className="block text-sm font-medium mb-1">
-                            Image <span className="text-red-500">*</span>
+                            Image of Area <span className="text-red-500">*</span>
                         </label>
                         <div className="border rounded p-4">
                             {/* Camera View */}
@@ -301,7 +329,7 @@ export function ComplaintScreen() {
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                                         </svg>
-                                        <p className="text-gray-500 mt-2">No image captured</p>
+                                        <p className="text-gray-500 mt-2">Please capture image of the area</p>
                                     </div>
                                     <button 
                                         type="button" 
@@ -367,7 +395,7 @@ export function ComplaintScreen() {
                             : 'bg-primary text-white hover:bg-primary-dark'}`}
                         disabled={isLoading || !uploadComplete}
                     >
-                        Submit Complaint
+                        Submit Bin Pickup Request
                     </button>
                 </form>
             </div>
