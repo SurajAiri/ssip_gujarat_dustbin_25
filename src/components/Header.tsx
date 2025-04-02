@@ -11,7 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Menu, User, Home, Map, BarChart, Droplet, Leaf, Calendar, Info } from "lucide-react";
+import { Menu, User, Home, Map, BarChart, Droplet, Leaf, Calendar} from "lucide-react";
 import { Link } from 'react-router-dom';
 import { APP_NAME, GOVERNMENT } from '@/utils/contants';
 import { useNavigate } from 'react-router-dom';

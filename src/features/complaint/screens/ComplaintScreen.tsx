@@ -1,5 +1,4 @@
 import Footer from "@/components/Footer";
-import {Switch }from "@/components/ui/switch"
 import CustomHeader from "@/components/Header";
 import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -31,7 +30,7 @@ export function ComplaintScreen() {
     const [location, setLocation] = useState("");
     const [isPermanent, setIsPermanent] = useState(false);
 
-    const { register, handleSubmit, formState: { errors }, reset, setValue, watch } = useForm<IBinPickupRequest>({
+    const { register, handleSubmit, formState: { errors }, reset, setValue } = useForm<IBinPickupRequest>({
         defaultValues: {
             isPermanent: false
         }

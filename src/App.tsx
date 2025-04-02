@@ -1,7 +1,6 @@
 
 import LoginScreen from "./features/auth/screens/LoginScreen"
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { HomeScreen } from "./features/general/screens/HomeScreen";
 import NotFoundScreen from "./features/general/screens/NotFoundScreen";
 import { ShowBinScreen } from "./features/map/screens/ShowBinScreen";
 import { ComplaintScreen } from "./features/complaint/screens/ComplaintScreen";
