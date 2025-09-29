@@ -4,6 +4,41 @@ A comprehensive waste management solution built for **SSIP Gujarat 2025** hackat
 
 ## 🌟 Features
 
+### preview:
+
+<!-- ![Dashboard Preview](previews/dashboard.png)
+_Admin Dashboard - Comprehensive waste management overview_ -->
+
+![Map View](previews/map_bin.png)
+_Interactive Dustbin Location Map with real-time status_
+
+<table>
+  <tr>
+    <td align="center" width="50%">
+      <img src="previews/dashboard.png" alt="Dashboard Preview" style="max-width:100%;height:auto;" /><br/>
+      <strong>Admin Dashboard</strong><br/>
+      Comprehensive waste management overview
+    </td>
+    <td align="center" width="50%">
+      <img src="previews/pickup.png" alt="Pickup Scheduling" style="max-width:100%;height:auto;" /><br/>
+      <strong>Pickup Scheduling</strong><br/>
+      Efficient route planning and management
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <img src="previews/request.png" alt="Request Management" style="max-width:100%;height:auto;" /><br/>
+      <strong>Request Management</strong><br/>
+      Streamlined complaint handling system
+    </td>
+    <td align="center" width="50%">
+      <img src="previews/visual.png" alt="Data Visualization" style="max-width:100%;height:auto;" /><br/>
+      <strong>Data Visualization</strong><br/>
+      Analytics and insights dashboard
+    </td>
+  </tr>
+</table>
+
 ### Public Features
 
 - **🗺️ Dustbin Location Map**: Interactive map showing all dustbin locations with real-time status
@@ -41,41 +76,6 @@ A comprehensive waste management solution built for **SSIP Gujarat 2025** hackat
 - **Node.js** (v18 or higher)
 - **Bun** runtime (recommended) or npm/yarn
 - **Google Maps API Key**
-
-### preview:
-
-<!-- ![Dashboard Preview](previews/dashboard.png)
-_Admin Dashboard - Comprehensive waste management overview_ -->
-
-![Map View](previews/map_bin.png)
-_Interactive Dustbin Location Map with real-time status_
-
-<table>
-  <tr>
-    <td align="center" width="50%">
-      <img src="previews/dashboard.png" alt="Dashboard Preview" style="max-width:100%;height:auto;" /><br/>
-      <strong>Admin Dashboard</strong><br/>
-      Comprehensive waste management overview
-    </td>
-    <td align="center" width="50%">
-      <img src="previews/pickup.png" alt="Pickup Scheduling" style="max-width:100%;height:auto;" /><br/>
-      <strong>Pickup Scheduling</strong><br/>
-      Efficient route planning and management
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="50%">
-      <img src="previews/request.png" alt="Request Management" style="max-width:100%;height:auto;" /><br/>
-      <strong>Request Management</strong><br/>
-      Streamlined complaint handling system
-    </td>
-    <td align="center" width="50%">
-      <img src="previews/visual.png" alt="Data Visualization" style="max-width:100%;height:auto;" /><br/>
-      <strong>Data Visualization</strong><br/>
-      Analytics and insights dashboard
-    </td>
-  </tr>
-</table>
 
 ### Installation
 
